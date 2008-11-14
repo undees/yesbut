@@ -27,11 +27,8 @@ background = background.modulate 0.25, 0.25
 File.open('mouse.txt') do |f|
   f.each_line do |l|
     x, y = l.split.map {|s| s.to_i}
-    background.composite! finger, x - 26, y - 79, PlusCompositeOp
+    background.composite! finger, x, y, PlusCompositeOp
   end
 end
 
 background.write 'heatmap.png'
-
-# 26, 79
-
