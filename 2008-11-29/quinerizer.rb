@@ -1,7 +1,7 @@
 require 'base64'
 
 class String
-  def infuse
+  def scramble
     Base64.encode64 self
   end
   
@@ -10,13 +10,13 @@ class String
 require 'base64'
 
 class String
-  def extract
+  def unscramble
     Base64.decode64 self
   end
 end
 
 HERE
-    s.sub('%s', s.infuse)
+    s.sub('%s', s.scramble)
   end
 end
 

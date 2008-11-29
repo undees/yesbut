@@ -13,7 +13,7 @@ describe "String#quinerizer" do
     template = <<-HERE
 s = "%s"
 
-puts s.extract.sub("%s", s)
+puts s.unscramble.sub("%s", s)
     HERE
     
     quine = template.quinerize

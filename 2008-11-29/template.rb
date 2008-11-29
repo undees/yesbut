@@ -1,3 +1,3 @@
 s = "%s"
 
-puts s.extract.sub("%s", s)
+puts s.unscramble.sub("%s", s)
