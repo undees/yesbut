@@ -4,7 +4,7 @@
 
 (def s inc)
 
-(defn p [sub] (fn [& xs] (nth xs (dec sub))))
+(defn p [_ sub] (fn [& xs] (nth xs (dec sub))))
 
 (defn o [f & gs]
   (fn [& xs]
@@ -17,8 +17,8 @@
   (fn f [x & ys]
     (if (zero? x)
         (apply g ys)
-        (let [pred (dec x)]
+        (let [prev (dec x)]
           (apply h
-                 (list* pred
-                        (apply f (cons pred ys))
+                 (list* prev
+                        (apply f (cons prev ys))
                         ys))))))
