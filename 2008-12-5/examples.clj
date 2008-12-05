@@ -11,7 +11,7 @@
 (def if-then-else (p-r (p 2 2) (p 4 3)))
 
 (println (format "if 0 then 6 else 7 = %d" (if-then-else 0 6 7)))
-(println (format "if 1 then 8 else 9 = %d" (if-then-else 1 8 9)))
+(println (format "if 1 then 6 else 7 = %d" (if-then-else 1 6 7)))
 
 (def logical-or (o if-then-else (p 2 1) (p 2 1) (p 2 2)))
 
