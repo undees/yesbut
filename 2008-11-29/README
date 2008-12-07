@@ -1,0 +1,103 @@
+The Road to Quine
+=================
+
+A quine is a program that prints its own source code as output,
+without using any dirty tricks like "go find the file this source code
+lives in, and spit out the contents."
+
+Most programmers cut their baby teeth on neat tricks like quines.
+Others spend their undergrad years using electrons as the fundamental
+unit of computation, and don't get to programming-language tomfoolery
+until much further on.
+
+So, better late than never.
+
+To see why writing a quine takes a bit of twisty thinking, consider
+this Ruby program:
+
+  puts
+
+It just prints a blank line.  How about this one?
+
+  puts 'puts'
+
+That one prints the following:
+
+  puts
+
+Okay, how about this?
+
+  puts 'puts "puts"'
+
+That results in:
+
+  puts "puts"
+
+No matter how many "puts"es we have in there, we always need one more
+than we have.  We need a way to hide a lil' copy of the program inside
+itself.  Let's try to trick ourselves by scrambling it!
+
+What if we could set up some variable "s" that contained a scrambled
+version of the program's source?
+
+  s = "[scrambled source code]"
+  puts s.unscramble
+
+But to scramble the program, we'd have to know the whole text in
+advance -- including the scrambled part!  Instead, let's imagine
+scrambling just a skeleton of the program, with the "%s" marker
+standing in for the scrambled part.
+
+Here's what the skeleton looks like:
+
+  s = "%s"
+  puts s.unscramble % s
+
+Now _that_ we can scramble.  Don't worry about how yet.  But once
+we've done so, the following program will be a quine:
+
+  s = "[scrambled skeleton]"
+  puts s.unscramble % s
+
+Almost.  We still have to write the "unscramble" function and make
+sure the program has access to the definition.
+
+Rather than manually scrambling the skeleton and pasting it into the
+program, I've built a "Quinerizer" class that does this for me.  That
+way, it's easy to change scramble / unscramble methods on a whim.  In
+the spirit of swatting a fly with a Buick, Quinerizer has unit tests
+as well; feel free to peek at that code on your own.
+
+Here's the auto-generated quine using Base64 as a scrambling mechanism:
+
+  require 'base64'
+
+  class String
+    def unscramble
+      Base64.decode64 self
+    end
+  end
+
+  s = "cmVxdWlyZSAnYmFzZTY0JwoKY2xhc3MgU3RyaW5nCiAgZGVmIHVuc2NyYW1i
+  bGUKICAgIEJhc2U2NC5kZWNvZGU2NCBzZWxmCiAgZW5kCmVuZAoKcyA9ICIl
+  cyIKCnB1dHMgcy51bnNjcmFtYmxlLnN1YigiJXMiLCBzKQo=
+  "
+
+  puts s.unscramble.sub("%s", s)
+
+Go ahead, try it!
+
+This qualifies as a quine, but we can certainly be more
+space-efficient than Base64.  Imagine using regular string quoting and
+printing (e.g., via String#inspect) instead of a scrambling and
+unscrambling routine.  If we're very careful with our percent signs
+and quote marks, we can condense the quine down to this:
+
+  s = "s = %s; puts s %% s.inspect"; puts s % s.inspect
+
+This approach reaches its full logical extreme in Ryan Davis's curt
+Ruby quine (http://blog.zenspider.com/2006/09/ruby-quine--slightly--smaller.html):
+
+  _="_=%p;puts _%%_";puts _%_
+
+Hard to do much better than that.
