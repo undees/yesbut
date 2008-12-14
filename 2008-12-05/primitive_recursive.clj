@@ -1,10 +1,18 @@
 (ns primitive-recursive)
 
-(def z (constantly 0))
+(defn- args [arity]
+  (map (fn [n] (symbol (str \p n)))
+       (range 0 arity)))
+
+(defmacro z [arity]
+  (let [xs (args arity)]
+    `(fn [~@xs] 0)))
 
 (def s inc)
 
-(defn p [_ sub] (fn [& xs] (nth xs (dec sub))))
+(defmacro p [super sub]
+  (let [xs (args super)]
+    `(fn [~@xs] ~(nth xs (dec sub)))))
 
 (defn o [f & gs]
   (fn [& xs]

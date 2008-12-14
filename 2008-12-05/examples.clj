@@ -6,7 +6,7 @@
 (defspec add
   ([2 3] (= value 5)))
 
-(def multiply (p-r z (o add (p 3 2) (p 3 3))))
+(def multiply (p-r (z 1) (o add (p 3 2) (p 3 3))))
 
 (defspec multiply
   ([4 5] (= value 20)))
@@ -34,16 +34,16 @@
   ([1 1] (= value 1)))
 
 (defn exists [pred]
-  (p-r z (o logical-or (o pred (p 2 1)) (p 2 2))))
+  (p-r (z 0) (o logical-or (o pred (p 2 1)) (p 2 2))))
 
 (defn for-all [pred]
-  (p-r (o s z) (o logical-and (o pred (p 2 1)) (p 2 2))))
+  (p-r (o s (z 0)) (o logical-and (o pred (p 2 1)) (p 2 2))))
 
 ;; Predicates to throw at exists and for-all
-(def negative z) ; false for all n in N, by inspection
-(def logical-not (o if-then-else (p 1 1) z (o s z)))
+(def negative (z 1)) ; false for all n in N, by inspection
+(def logical-not (o if-then-else (p 1 1) (z 1) (o s (z 1))))
 (def non-negative (o logical-not negative))
-(def even (p-r (o s z) (o logical-not (p 2 2))))
+(def even (p-r (o s (z 0)) (o logical-not (p 2 2))))
 
 (defspec exists
   ([negative]     (= (value 10) 0))
