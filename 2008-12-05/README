@@ -1,0 +1,133 @@
+Dusting off the boots
+
+Do you remember the "Rocky's Boots" video game from the eighties?  Of
+course you do.  While the rest of us were struggling to survive to the
+end of the Oregon Trail, you were building rudimentary Rube Goldberg
+devices out of simple "and" and "or" operations to make Rocky the
+Raccoon kick the right sequence of little colored squares.
+
+Primitive recursion functions in mathematics are kind of like that.
+Most simple calculations you can think of -- testing whether or not a
+number is prime, say -- can be built out of a few really basic
+functional pieces.
+
+First, you need to be able to represent natural numbers.  You can do
+that with a zero function, a successor function, and a glue function
+to stick 'em together.  Need to represent the number two?  Glue a
+successor to another successor to a zero.
+
+Next, you need a picker and a flicker.  The picker chooses a single
+item out of a list, and the flicker takes two functions and "flicks"
+the calculation to one of them, depending solely on whether a single
+number is zero or nonzero.
+
+The accepted names for these functions, respectively, are zero (Z),
+successor (S), composition (written as a little circle; I'll use a
+lower case o), projection (P), and primitive recursion (PR).
+
+Projection is typically written with a superscript representing the
+number of items on the list, and a subscript representing which item
+to choose.  So P/3/2 is a function that takes three numbers and hands
+you the second.
+
+The canonical example they give you in grad school is defining
+addition.  You can add two numbers together by adding 1 to one of
+them, over and over again.  Doing something over and over requires the
+flicker; that is, primitive recursion.  PR asks us for two things:
+
+  1) When the first number is zero, PR hands us just the other number
+     says, "What do you want to do with this?"  Since anything plus
+     zero equals itself, we just hand the number back.  We're given
+     one number and we give it right back, so this is P/1/1.
+
+  2) When the first number is something greater than zero, PR gives us
+     a three-item list: the first number's _predecessor_, the running
+     total so far, and the second number.  How do we get a sum from
+     that?  We take the running total and add one to it.  Picking the
+     middle item from a list is P/3/2, adding one is S, and when we
+     glue 'em up, we get [S o P/3/2].
+
+Putting it all together, we have Add = PR[P/1/1, [S o P/3/2]].
+
+If we had some kind of machine that understood all these pieces, we
+could feed it this definition of Add, give it two numbers, and watch
+as the correct sum came magically out the other end.  Some would read
+this paragraph, scoff, and say, "Big deal.  Even a Windows PC can add
+two numbers together."  But you'd never say that, no.  You like
+knowing that you could build addition with your bare hands if an
+emergency called for it.
+
+So here's an Lisp-y implementation in Clojure that you can play with.
+For zero and the successor, Clojure has the "constantly" and "inc"
+built-in functions, respectively:
+
+(def z (constantly 0))
+
+(def s inc)
+
+Composition -- the glue function -- is easy when we're just sticking
+two single-value functions together:
+
+(defn o [f g]
+  (fn [x] (f (g x))))
+
+This code just builds a new function "f o g" that takes a number x,
+runs it through a function g, and hands the result to another
+function, f.
+
+Real life is a little more complicated, though.  g may take more
+than one parameter, so we may needa bunch of x's.  Similarly, f may
+take more than one parameter, so we may need not just one g, but a
+list of them.  Calling a function with an unknown number of arguments
+is a job for "apply," that cornerstone of Lisp programming:
+
+(defn o [f & gs]
+  (fn [& xs]
+    (apply f
+           (map
+             (fn [g] (apply g xs))
+             gs))))
+
+Now for the picker and the flicker.  The picker, remember, just
+returns a single list item.  Clojure has a handy "nth" function for
+looking inside lists.
+
+(defn p [_ subscript] (fn [& xs] (nth xs (dec subscript))))
+
+You'll notice that p ignores its first parameter; that's just the list
+length, and we don't need it for this exercise.  Also, lists start at
+the zeroth item in Clojure, rather than the first -- so we need to
+subtract one from our index.
+
+That just leaves the flicker, primitive recursion.  This definition is
+the most complicated one of the batch, but it's still fairly
+straightforward.  By convention, we take a function g for the zero
+case and h for the nonzero case.  We then build a new function f that
+decides whether to call g or h based on the first value passed to it.
+
+(defn p-r [g h]
+  (fn f [x y]
+    (if (zero? x)
+        (g y)
+        (let [prev (dec x)]
+          (h prev (f prev y) y)))))
+
+This limited PR won't be able to define anything other than a
+two-argument function, but that's enough for us to build and use
+addition:
+
+(def add (p-r (p 1 1) (o s (p 3 2))))
+
+(add 4 5) ;; => 9
+
+Aside from making addition slower and harder to read, what has this
+bought us?  Well, it's given me peace of mind, since I can test my
+grad school homework answers after writing them.  It was also a great
+excuse to learn the basics of Clojure and SLIME.  But mostly, it was a
+chance to recapture that thrill of lining up all the building-block
+logic circuits to boot all the blue diamonds and make Rocky dance.
+
+So have a peek at the latest version of the code.  It does a lot more
+than what you see here, like checking the lengths of argument lists,
+and handling primitive recursion for any number of parameters.  Happy
+kickin'!
