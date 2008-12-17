@@ -6,7 +6,7 @@ end of the Oregon Trail, you were building rudimentary Rube Goldberg
 devices out of simple "and" and "or" operations to make Rocky the
 Raccoon kick the right sequence of little colored squares.
 
-Primitive recursion functions in mathematics are kind of like that.
+Primitive recursive functions in mathematics are kind of like that.
 Most simple calculations you can think of -- testing whether or not a
 number is prime, say -- can be built out of a few really basic
 functional pieces.
