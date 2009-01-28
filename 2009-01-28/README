@@ -1,0 +1,26 @@
+This folder contains example code adapted for a testing-related
+episode of the CocoaCast podcast (http://www.cocoacast.com). I've
+taken one of the Mac samples from "Scripted GUI Testing With Ruby"
+(http://pragprog.com/titles/idgtr) and translated it from classic
+RSpec notation into the new Cucumber format.
+
+Here's how to try out the code:
+
+1) If you're not on Leopard, upgrade to a newer Ruby version, such as
+   the one available at http://www.macports.org.
+
+2) Install the libraries used by this example:
+
+   sudo gem install cucumber rspec rb-appscript
+
+3) Run the code:
+
+   cucumber features
+
+4) Explore the code.  Start with the features/*.feature files to see
+   the intent of the tests.  These plain English descriptions of
+   features just happen to be running code.  To see which pieces of
+   Ruby code are run for each step of the test, look inside
+   features/step_definitions/edit_definitions.rb.  The AppleScript
+   definitions inside features/support/document.rb carry out the
+   lower- level keyboard and mouse commands.
