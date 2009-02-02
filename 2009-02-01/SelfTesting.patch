@@ -1,0 +1,101 @@
+diff --git a/Classes/ScriptRunner.m b/Classes/ScriptRunner.m
+--- a/Classes/ScriptRunner.m
++++ b/Classes/ScriptRunner.m
+@@ -28,7 +28,7 @@
+ 	if (self != nil)
+ 	{
+ 		NSData *fileData =
+-			[NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"TestScript" ofType:@"plist"]];
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000"]];
+ 		scriptCommands =
+ 			[[NSPropertyListSerialization
+ 				propertyListFromData:fileData
+@@ -161,6 +161,7 @@
+ 		if (path == nil)
+ 		{
+ 			fprintf(stderr, "### Command 'outputView' requires 'outputPath' parameter.\n");
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 		
+@@ -210,6 +211,7 @@
+ 		if (viewXPath == nil)
+ 		{
+ 			fprintf(stderr, "### Command 'checkMatchCount' requires 'viewXPath' parameter.\n");
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 
+@@ -217,6 +219,7 @@
+ 		if (matchCount == nil)
+ 		{
+ 			fprintf(stderr, "### Command 'checkMatchCount' requires 'matchCount' parameter.\n");
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 
+@@ -232,6 +235,7 @@
+ 				"### 'checkMatchCount' wanted a matching count of %ld but encountered %ld\n",
+ 				[matchCount integerValue],
+ 				[views count]);
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 	}
+@@ -251,6 +255,7 @@
+ 		if (viewXPath == nil)
+ 		{
+ 			fprintf(stderr, "### Command 'simulateTouch' requires 'viewXPath' parameter.\n");
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 		
+@@ -264,6 +269,7 @@
+ 				stderr,
+ 				"### 'viewXPath' for command 'simulateTouch' selected %ld nodes, where exactly 1 is required.\n",
+ 				[views count]);
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 		
+@@ -310,6 +316,7 @@
+ 				stderr,
+ 				"### 'viewXPath' for command 'scrollToRow' selected %ld nodes, where exactly 1 is required.\n",
+ 				[views count]);
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 		if(![[views objectAtIndex:0] isKindOfClass:[UITableView class]])
+@@ -318,6 +325,7 @@
+ 				stderr,
+ 				"### 'viewXPath' for command 'scrollToRow' selected a node but it wasn't a UITableView as required.\n",
+ 				[views count]);
++			[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/fail"]];
+ 			exit(1);
+ 		}
+ 		
+@@ -333,11 +341,24 @@
+ 	//
+ 	[scriptCommands removeObjectAtIndex:0];
+ 
++	[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/pass"]];
++
++	NSData *fileData =
++		[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000"]];
++	scriptCommands =
++		[[NSPropertyListSerialization
++		  propertyListFromData:fileData
++		  mutabilityOption:NSPropertyListMutableContainers
++		  format:nil
++		  errorDescription:nil]
++		 retain];
++
+ 	//
+ 	// Exit the program when complete
+ 	//
+ 	if ([scriptCommands count] == 0)
+ 	{
++		[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://127.0.0.1:3000/pass"]];
+ 		[self release];
+ 		exit(0);
+ 	}

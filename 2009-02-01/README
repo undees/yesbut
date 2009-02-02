@@ -1,0 +1,53 @@
+This folder contains a quick demo of a Cucumber plain-English test
+script testing an iPhone GUI using the simulator.  The project goal
+was to be as small a delta as possible from the existing work of other
+people.  Accordingly, there have been regrettably few conveniences
+added.  But it should be enough to whet your appetite.
+
+1) Download and extract Matt Gallagher's SelfTesting project from
+   http://cocoawithlove.googlepages.com/SelfTesting.zip.
+
+2) Apply SelfTesting.patch on top of the project; this will make the
+   iPhone app fetch its list of instructions from HTTP instead of a
+   file:
+
+   cd SelfTesting
+   patch -p1 < SelfTesting.patch
+
+3) Assuming you have Ruby, install the libraries used for this demo:
+
+   sudo gem install cucumber sinatra
+
+4) In separate shells, launch the "quarterback" and "coach" Web
+   servers, which talk to the iPhone and Cucumber, respectively:
+
+   # In one console:
+   cd server
+   ruby quarterback.rb -p 3000
+
+   # In another console:
+   cd server
+   ruby coach.rb -p 3001
+
+5) In a third shell, start the Cucumber test:
+
+   cucumber features
+
+   This will block, waiting for the iPhone simulator to do stuff.
+
+6) In yet another shell, run the iPhone app (kicking this off
+   automatically from Cucumber is a great idea for a future
+   improvement):
+
+   cd SelfTesting
+   xcodebuild -configuration "Release" -target "TestScriptRunner"
+
+You should see little messages springing to life in the consoles,
+culminating in redundant success announcements in the Cucumber and
+xcodebuild shells.
+
+Plenty more to do from here, including moving all the pass/fail
+decisions out of the app, launching the simulator automatically,
+putting this in a real iPhone, and so on.
+
+But baby steps, right?
