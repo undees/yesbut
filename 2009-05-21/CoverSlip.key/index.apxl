@@ -33050,7 +33050,7 @@
           </sf:text-storage>
         </key:text>
       </key:title-placeholder>
-      <key:body-placeholder sfa:ID="BGBodyPlaceholderInfo-15" sf:href="http://localhost/snippets/keynote.sh/all">
+      <key:body-placeholder sfa:ID="BGBodyPlaceholderInfo-15" sf:href="http://localhost/snippets/keynote_formatter.py/format">
         <sf:geometry sfa:ID="SFDAffineGeometry-83" sf:sizesLocked="true">
           <sf:naturalSize sfa:w="100" sfa:h="100"/>
           <sf:size sfa:w="100" sfa:h="100"/>
