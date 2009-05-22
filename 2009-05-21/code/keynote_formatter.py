@@ -15,7 +15,7 @@ class KeynoteFormatter(Formatter):
             return (name, style)
 
         self.styles = dict(map(style_name, styles.items()))
-    
+
     def style_for_ttype(self, ttype):
         parts = str(ttype).split('.')
         name = '.'.join(parts[1:])

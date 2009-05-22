@@ -1,3 +1,6 @@
+syntax:glob
+
 .git/
 .DS_Store
 private/
+*.pyc

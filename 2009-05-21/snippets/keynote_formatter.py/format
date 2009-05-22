@@ -1,15 +1,15 @@
-def format(self, tokensource, outfile):
-    outfile.write('<sf:p sf:style="%s" sf:list-level="1">'
-                  % self.styles['Paragraph'])
+    def format(self, tokensource, outfile):
+        outfile.write('<sf:p sf:style="%s" sf:list-level="1">'
+                      % self.styles['Paragraph'])
 
-    for ttype, value in tokensource:
-        style = self.style_for_ttype(ttype)
-        text = escape(value).replace('\n', '<sf:lnbr/>')
+        for ttype, value in tokensource:
+            style = self.style_for_ttype(ttype)
+            text = escape(value).replace('\n', '<sf:lnbr/>')
 
-        if style:
-            outfile.write('<sf:span sf:style="%s">%s</sf:span>'
-                          % (style, text))
-        else:
-            outfile.write(text)
+            if style:
+                outfile.write('<sf:span sf:style="%s">%s</sf:span>'
+                              % (style, text))
+            else:
+                outfile.write(text)
 
-    outfile.write('</sf:p>')
+        outfile.write('</sf:p>')
